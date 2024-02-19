@@ -5,6 +5,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>게시판 목록</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    h3 {
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      width: 600px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 10px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .chk {
+      text-align: center;
+    }
+
+    #selectAll {
+      cursor: pointer;
+      color: blue;
+      text-decoration: underline;
+    }
+    .btn_wrap{
+    display:flex;
+    justify-content: space-between;
+    margin-top: 10px;
+
+    #delBtn,
+    #addBtn {
+      width: 30%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    #delBtn {
+      background-color: #f44336;
+      color: white;
+    }
+    #addBtn {
+      background-color: #008CBA;
+      color: white;
+    }
+  </style>
 </head>
 <body>
 <form id="frm" action="/board/del" method="post">

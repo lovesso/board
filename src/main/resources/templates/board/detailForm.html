@@ -6,20 +6,88 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>게시글 상세조회</title>
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-  </style>
+    h3 {
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      width: 400px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    label {
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    span {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    #editBtn,
+    #deleteBtn,
+    #listBtn {
+      width: 30%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    #editBtn {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    #deleteBtn {
+      background-color: #f44336;
+      color: white;
+    }
+
+    #listBtn {
+      background-color: #008CBA;
+      color: white;
+    }
   </style>
 </head>
 <body>
-
+<div class="whole">
 <h3>게시글 상세조회</h3>
 <form action="#" method="post">
+
   <div><label for="boardId">게시글 번호</label>
     <input id="boardId" type="text" th:value="${board.boardId}" readonly></div>
   <div><label for="title">제목</label>
     <input id="title" name="title" type="text" th:value="${board.title}" readonly></div>
   <div><label for="content">내용</label>
-    <textarea name="content" id="content" rows="40" th:text="${board.content}" readonly></textarea></div>
+    <textarea name="content" id="content" rows="15" th:text="${board.content}" readonly></textarea></div>
   <div><label for="writer">작성자</label>
     <input id="writer" name="writer" type="text" th:value="${board.writer}" readonly></div>
   <div><label>최초작성일</label>
@@ -33,6 +101,7 @@
     <input id="listBtn" type="button" value="목록으로">
   </div>
 </form>
+</div>
 
 <script>
 

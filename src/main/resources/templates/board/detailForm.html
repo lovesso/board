@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글 상세조회</title>
+  <style>
+
+  </style>
+  </style>
+</head>
+<body>
+
+<h3>게시글 상세조회</h3>
+<form action="#" method="post">
+  <div><label for="boardId">게시글 번호</label>
+    <input id="boardId" type="text" th:value="${board.boardId}" readonly></div>
+  <div><label for="title">제목</label>
+    <input id="title" name="title" type="text" th:value="${board.title}" readonly></div>
+  <div><label for="content">내용</label>
+    <textarea name="content" id="content" rows="40" th:text="${board.content}" readonly></textarea></div>
+  <div><label for="writer">작성자</label>
+    <input id="writer" name="writer" type="text" th:value="${board.writer}" readonly></div>
+  <div><label>최초작성일</label>
+    <span th:text="${#temporals.format(board.cdate,'yyyy년 MM월 dd일 a hh시 mm분')}"></span></div>
+  <div><label>수정일</label>
+    <span th:text="${#temporals.format(board.udate,'yyyy년 MM월 dd일 a hh시 mm분')}"></span></div>
+
+  <div>
+    <input id="editBtn" type="button" value="수정하기">
+    <input id="deleteBtn" type="button" value="삭제하기">
+    <input id="listBtn" type="button" value="목록으로">
+  </div>
+</form>
+
+<script>
+
+  //'목록으로' 버튼 클릭시 이동
+  const $listBtn = document.getElementById('listBtn');
+
+    $listBtn.addEventListener('click', e => {
+      location.href = '/board';
+    });
+
+    // '삭제하기' 버튼 클릭시
+   const $deleteBtn = document.getElementById('deleteBtn');
+
+    $deleteBtn.addEventListener('click', evt => {
+      if(!window.confirm('삭제 하시겠습니까?')) {
+        return;
+      }
+      const bid = document.getElementById('boardId').value;
+       location.href = `/board/${bid}/del`;
+    });
+
+  // '수정하기' 버튼 클릭시
+    const $editBtn = document.getElementById('editBtn')
+
+      $editBtn.addEventListener('click', event =>{
+      const bid = document.getElementById('boardId').value;
+        location.href=`/board/${bid}/edit`;
+    });
+
+
+
+
+
+</script>
+</body>
+</html>

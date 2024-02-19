@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Title</title>
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 50vh;
+    }
+
+      .whole {
+      background-color: white;
+      box-shadow: 0 0 10px black;
+      padding: 20px;
+      width: 400px;
+    }
+
+     h3 {
+      text-align: center;
+    }
+
+
+  input::placeholder {
+  color:gray;
+  font-size:0.8em;
+  font-style: italic;
+}
+.err-msg {
+  display:none;
+  color:red;
+  font-size:0.8em;
+  font-style: italic;
+}
+.err-msg.on{
+  display:inline-block;
+}
+  </style>
+</head>
+<body>
+
+<div class="whole">
+  <h3>글쓰기 수정</h3>
+  <form action="" method="post" th:object="${board}">
+    <div><span class="content_wrap"></span></div>
+    <div th:if="${s_err_global !=null and #strings.length(s_err_global) > 0}">
+      <span class="err-msg" th:class="'err-msg on'" th:text="${s_err_global}"></span>
+    </div>
+    <div>
+      <label for="boardId">글번호</label>
+      <input id="boardId" type="text" th:value="${board.boardId}" readonly>
+    </div>
+    <div>
+      <label for="title">제목</label>
+      <input id="title" name="title" type="text" placeholder="필수로 입력하세요.">
+      <span class="err-msg" id="errTitle">11</span>
+      <span class="err-msg" th:if="${s_err_title != ''}" th:class="'err-msg on'" th:text="${s_err_title}"></span>
+    </div>
+
+    <div>
+      <label for="writer">작성자</label>
+      <input id="writer" name="writer" type="text" placeholder="필수로 입력하세요.">
+      <span class="err-msg" id="errWriter">11</span>
+      <span class="err-msg" th:if="${s_err_writer != ''}" th:class="'err-msg on'" th:text="${s_err_writer}"></span>
+    </div>
+    <div>
+      <label for="content">내용</label>
+    </div>
+    <textarea id="content" name="content" rows="10" placeholder="필수로 입력하세요. 1000자 이내."></textarea>
+    <span class="err-msg" id="errContent">11</span>
+    <span class="err-msg" th:if="${s_err_content != ''}" th:class="'err-msg on'" th:text="${s_err_content}"></span>
+
+    <div class="button_wrap">
+      <input type="button" value="목록으로" onclick="location.href='/board'">
+      <input type="submit" value="저장하기">
+      <input type="reset" value="작성취소">
+    </div>
+  </form>
+</div>
+<script>
+
+  const $listBtn = document.getElementById('listBtn');      //목록버튼
+    //목록
+  $listBtn.addEventListener('click',e=>{
+    location.href = '/board';      // GET http://서버주소 or 서버도메인/board
+  }, false);
+
+    //1) 제목 유효성 체크
+title.addEventListener('focus',evt=>{
+  evt.target.style.backgroundColor = 'lightgray';
+});
+
+title.addEventListener('blur',evt=>{
+  evt.target.style.backgroundColor = 'initial';
+  //유효성 체크
+  console.log(evt.target.value);
+  const pattern = /[a-zA-Z0-9ㄱ-ㅎ가-힣_\-]/;
+  if(pattern.test(evt.target.value)){
+    errTitle.classList.remove('on');
+    errTitle.textContent = '';
+  }else{
+    errTitle.classList.add('on');
+    errTitle.textContent = '필수로 입력하세요.';
+    evt.target.focus();
+    evt.target.select();
+  }
+});
+
+  //작성자 유효성 체크
+    writer.addEventListener('focus', evt => {
+    evt.target.style.backgroundColor = 'lightgray';
+    });
+
+    writer.addEventListener('blur',evt=>{
+      evt.target.style.backgroundColor = 'initial';
+
+      //유효성 체크
+  console.log(evt.target.value);
+  const pattern = /[a-zA-Z0-9ㄱ-ㅎ가-힣_\-]/;
+  if(pattern.test(evt.target.value)){
+    errWriter.classList.remove('on');
+    errWriter.textContent = '';
+  }else{
+    errWriter.classList.add('on');
+    errWriter.textContent = '필수로 입력하세요.';
+    evt.target.focus();
+    evt.target.select();
+  }
+});
+
+  //내용 유효성 검사
+      content.addEventListener('focus', evt => {
+    evt.target.style.backgroundColor = 'lightgray';
+    });
+
+    content.addEventListener('blur',evt=>{
+      evt.target.style.backgroundColor = 'initial';
+
+      //유효성 체크
+  console.log(evt.target.value);
+  const pattern = /[a-zA-Z0-9ㄱ-ㅎ가-힣_\-]{1-1000}/;
+  if(pattern.test(evt.target.value)){
+    errContent.classList.remove('on');
+    errContent.textContent = '';
+  }else{
+    errContent.classList.add('on');
+    errContent.textContent = '필수로 입력하세요.';
+
+    evt.target.focus();
+    evt.target.select();
+  }
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글 상세조회</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    h3 {
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      width: 400px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    label {
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    span {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    #editBtn,
+    #deleteBtn,
+    #listBtn {
+      width: 30%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    #editBtn {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    #deleteBtn {
+      background-color: #f44336;
+      color: white;
+    }
+
+    #listBtn {
+      background-color: #008CBA;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="whole">
+    <h3>게시글 상세조회</h3>
+    <form action="#" method="post">
+
+      <div><label for="boardId">게시글 번호</label>
+        <input id="boardId" type="text" th:value="${board.boardId}" readonly>
+      </div>
+      <div><label for="title">제목</label>
+        <input id="title" name="title" type="text" th:value="${board.title}" readonly>
+      </div>
+      <div><label for="content">내용</label>
+        <textarea name="content" id="content" rows="15" th:text="${board.content}" readonly></textarea>
+      </div>
+      <div><label for="writer">작성자</label>
+        <input id="writer" name="writer" type="text" th:value="${board.writer}" readonly>
+      </div>
+      <div><label>최초작성일</label>
+        <span th:text="${#temporals.format(board.cdate,'yyyy년 MM월 dd일 a hh시 mm분')}"></span>
+      </div>
+      <div><label>수정일</label>
+        <span th:text="${#temporals.format(board.udate,'yyyy년 MM월 dd일 a hh시 mm분')}"></span>
+      </div>
+
+      <div>
+        <input id="editBtn" type="button" value="수정하기">
+        <input id="deleteBtn" type="button" value="삭제하기">
+        <input id="listBtn" type="button" value="목록으로">
+      </div>
+    </form>
+  </div>
+
+  <script>
+    
+    //'목록으로' 버튼 클릭시 이동
+    const $listBtn = document.getElementById('listBtn');
+
+    $listBtn.addEventListener('click', e => {
+      location.href = '/board';
+    });
+
+    // '삭제하기' 버튼 클릭시
+    const $deleteBtn = document.getElementById('deleteBtn');
+
+    $deleteBtn.addEventListener('click', evt => {
+      if (!window.confirm('삭제 하시겠습니까?')) {
+        return;
+      }
+      const bid = document.getElementById('boardId').value;
+      location.href = `/board/${bid}/del`;
+    });
+
+    // '수정하기' 버튼 클릭시
+    const $editBtn = document.getElementById('editBtn')
+
+    $editBtn.addEventListener('click', event => {
+      const bid = document.getElementById('boardId').value;
+      location.href = `/board/${bid}/edit`;
+    });
+    // ------------------------------------------------------------
+
+    renderHTML();
+
+    // renderHTML
+    function renderHTML() {
+      const $div = document.createElement('div');
+      $div.innerHTML = `<div id='frm'>
+    <h4> 댓글 작성 </h4>
+    <div>
+      <label for="writer" placeholder="작성자"></label>
+      <input id='writer' name='writer' type="text">
+    </div>
+    <div>
+      <label for="commContent">내용</label>
+      <input id='commContent' name='commContent' type="text">
+    </div>
+    <div><button id='addBtn' type='button'>등록</button></div>
+  </form>
+  </div>
+  <div id='commentList'></div>
+  <div id='pagination'></div>
+  <img id='loadding' src='/img/loadding.svg'>
+`;
+      document.body.appentChild($div)
+      const $addBtn = $div.querySelector('#addBtn');
+      $addBtn.addEventListener('click', evt => {
+        console.log('등록');
+        const formData = new FormData($div.querySelector('#frm'));
+        const comment = {
+          writer: formData.get('writer'),
+          commContent: formData.get('commContent')
+        }
+        add(comment);
+      });
+
+      async function add(comment) {
+        const url = `http://localhost:9080/api/comments`;
+        const payload = comment;
+        const option = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            accept: 'application/json',
+          },
+          body: JSON.stringify(payload),   // js객체=>json포맷 문자열
+        };
+        try {
+          const res = await fetch(url, option);
+          if (!res.ok) return new Error('서버응답오류');
+          const result = await res.json(); //응답메세지 바디를 읽어 json포맷 문자열=>js객체
+          if (result.header.rtcd == '00') {
+            console.log(result.body);
+            list();
+          } else {
+            new Error('등록 실패!');
+          }
+        } catch (err) {
+          console.error(err.message);
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>

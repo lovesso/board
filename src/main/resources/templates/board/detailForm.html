@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>게시글 상세조회</title>
   <style>
-    body {
+    /* body {
       margin: 0;
       padding: 0;
       background-color: #f4f4f4;
@@ -75,66 +75,316 @@
       background-color: #008CBA;
       color: white;
     }
+    textarea {
+      resize: none; /* 크기 조절 비활성화
+    } */
   </style>
 </head>
+
 <body>
-<div class="whole">
-<h3>게시글 상세조회</h3>
-<form action="#" method="post">
+  <div class="whole">
+    <!--    게시글 상세조회-->
+    <h3>게시글 상세조회</h3>
+    <form action="#" method="post" th:object="${board}">
 
-  <div><label for="boardId">게시글 번호</label>
-    <input id="boardId" type="text" th:value="${board.boardId}" readonly></div>
-  <div><label for="title">제목</label>
-    <input id="title" name="title" type="text" th:value="${board.title}" readonly></div>
-  <div><label for="content">내용</label>
-    <textarea name="content" id="content" rows="15" th:text="${board.content}" readonly></textarea></div>
-  <div><label for="writer">작성자</label>
-    <input id="writer" name="writer" type="text" th:value="${board.writer}" readonly></div>
-  <div><label>최초작성일</label>
-    <span th:text="${#temporals.format(board.cdate,'yyyy년 MM월 dd일 a hh시 mm분')}"></span></div>
-  <div><label>수정일</label>
-    <span th:text="${#temporals.format(board.udate,'yyyy년 MM월 dd일 a hh시 mm분')}"></span></div>
+      <div><label for="boardId">게시글 번호</label>
+        <input id="boardId" type="text" th:value="${board.boardId}" readonly>
+      </div>
+      <div><label for="title">제목</label>
+        <input id="title" name="title" type="text" th:value="${board.title}" readonly>
+      </div>
+      <div><label for="content">내용</label>
+        <textarea name="content" id="content" rows="15" th:text="${board.content}" readonly></textarea>
+      </div>
+      <div><label for="writer">작성자</label>
+        <input id="writer" name="writer" type="text" th:value="${board.writer}" readonly>
+      </div>
+      <div><label>최초작성일</label>
+        <span th:text="${#temporals.format(board.cdate,'yyyy년 MM월 dd일 a hh시 mm분')}"></span>
+      </div>
+      <div><label>수정일</label>
+        <span th:text="${#temporals.format(board.udate,'yyyy년 MM월 dd일 a hh시 mm분')}"></span>
+      </div>
 
-  <div>
-    <input id="editBtn" type="button" value="수정하기">
-    <input id="deleteBtn" type="button" value="삭제하기">
-    <input id="listBtn" type="button" value="목록으로">
+      <div>
+        <input id="editBtn" type="button" value="수정하기">
+        <input id="deleteBtn" type="button" value="삭제하기">
+        <input id="listBtn" type="button" value="목록으로">
+      </div>
+    </form>
+    <!-- 댓글 등록 -->
+    <div class="commentLines">
+      <textarea class="addContent" cols="10" rows="5" placeholder="댓글을 입력하세요."></textarea>
+    </div>
+
+    <div>
+      <button id="CommentAddBtn">등록</button>
+    </div>
+
+    <!-- 등록시 에러-->
+    <div id="commentErrMsg"></div>
+
+    <!-- 댓글 목록-->
+    <ul class="commentLists"></ul>
+
+    <!-- 페이징 -->
+    <div id="pagination"></div>
+
+    <!-- 게시판 내 댓글 (내용, 수정과 삭제버튼 나옴) -->
+    <template id="myComment">
+      <div class="item read">
+        <!-- <input class="cmsId" type=""> </input> -->
+        <span class="cmsId" type=""> </span>
+        <span class="ccontent"></span>
+        <span class="cwriter"></span>
+        <button class="comEditBtn">수정</button>
+        <button class="comDelBtn">삭제</button>
+      </div>
+    </template>
+
+    <!-- 게시판 타인 댓글(내용만 나옴) -->
+    <template id="otherComment">
+      <div class="item read">
+        <span class="cmsId" type=""> </span>
+        <span class="ccontent"></span>
+        <span class="cwriter"></span>
+      </div>
+    </template>
+
+    <!-- 수정모드 -->
+    <template id="editMode">
+      <div class="item edit">
+        <span class="cmsId" type=""> </span>
+        <textarea class="editccontent" cols="20" rows="5" placeholder="댓글을 입력하세요."></textarea>
+        <button class="comSaveBtn">저장</button>
+        <button class="comCancelBtn">취소</button>
+      </div>
+    </template>
+
   </div>
-</form>
-</div>
 
-<script>
-
-  //'목록으로' 버튼 클릭시 이동
-  const $listBtn = document.getElementById('listBtn');
+  <script type="module" th:inline="javascript">
+    //--------------------------게시판-----------------------------------
+    //'목록으로' 버튼 클릭시 이동
+    const $listBtn = document.getElementById('listBtn');
 
     $listBtn.addEventListener('click', e => {
       location.href = '/board';
     });
 
     // '삭제하기' 버튼 클릭시
-   const $deleteBtn = document.getElementById('deleteBtn');
+    const $deleteBtn = document.getElementById('deleteBtn');
 
     $deleteBtn.addEventListener('click', evt => {
-      if(!window.confirm('삭제 하시겠습니까?')) {
+      if (!window.confirm('삭제 하시겠습니까?')) {
         return;
       }
       const bid = document.getElementById('boardId').value;
-       location.href = `/board/${bid}/del`;
+      location.href = `/board/${bid}/del`;
     });
 
-  // '수정하기' 버튼 클릭시
+    // '수정하기' 버튼 클릭시
     const $editBtn = document.getElementById('editBtn')
 
-      $editBtn.addEventListener('click', event =>{
+    $editBtn.addEventListener('click', event => {
       const bid = document.getElementById('boardId').value;
-        location.href=`/board/${bid}/edit`;
+      location.href = `/board/${bid}/edit`;
+    });
+    // ------------------------------------------------------------
+    //---------------------------댓글 스크립트----------------------------
+
+    const memberNickname = [[${ session.loginMember.nickname }]];
+    console.log(memberNickname);
+
+
+    const bid = document.getElementById('boardId').value;//댓글의 게시글 id
+    const $commentLists = document.querySelector('.commentLists'); // 댓글목록
+    const $myComment = document.getElementById('myComment'); // 내 댓글 폼
+    const $otherComment = document.getElementById('otherComment'); // 타인 댓글 폼
+    const boardId = document.getElementById('boardId').value; // 게시글번호값
+
+
+    list(boardId);
+    //----------------------------------------------------------------------------
+    //댓글 목록 불러오기
+    async function list(boardId) {
+      const url = `http://localhost:9080/api/comments?boardId=${boardId}`;
+      const option = {
+        method: 'GET',
+        headers: {
+          accept: 'application/json' // json 형태로 받기
+        }
+      };
+
+      try {
+        const res = await fetch(url, option);
+        if (!res.ok) return new Error('서버응답오류');
+        const result = await res.json(); // 응답메세지 바디 json => js 객체
+        if (result.header.rtcd == '00') {
+          console.log(result.body);
+
+          const html = result.body.map(comment => {
+            let $readModeLi = '';
+            if (comment.writer == memberNickname) { // 작성자 = 로그인ID 비교
+              $readModeLi = myComment.content.cloneNode(true).querySelector('div');
+            } else {
+              $readModeLi = otherComment.content.cloneNode(true).querySelector('div');
+            }
+            $readModeLi.querySelector('.cmsId').textContent = comment.commentsId;
+            // $readModeLi.querySelector('.cmsId').value = comment.commentsId; // input타입 commentsId 안읽어와짐
+            $readModeLi.querySelector('.cwriter').textContent = comment.writer;
+            $readModeLi.querySelector('.ccontent').textContent = comment.ccontent;
+            return $readModeLi.outerHTML;
+          }).join('');
+
+          $commentLists.innerHTML = html;
+
+
+        } else {
+          new Error('목록 가져오기 실패!');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+
+    //-----------------------------------------------------------------
+
+    //댓글 등록
+    const $CommentAddBtn = document.getElementById('CommentAddBtn'); // 등록버튼
+    const $addContent = document.querySelector('.addContent'); // 등록글
+
+    $CommentAddBtn.addEventListener('click', evt => {
+      //등록처리
+      const commentContent = $addContent.value;
+      const commentObj = {
+        "boardId": boardId,
+        "writer": memberNickname,
+        "ccontent": commentContent
+      }
+      add(commentObj);
+      $addContent.value = '';
+    });
+
+    async function add(commentObj) {
+      const url = `http://localhost:9080/api/comments`;
+      const payload = commentObj
+      const option = {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',      // json포맷 받기
+          'Content-Type': 'application/json' // json포맷 전달
+        },
+        body: JSON.stringify(payload),   // ★js 객체 => json 포맷 문자열
+      };
+      try {
+        const res = await fetch(url, option);
+        if (!res.ok) return new Error('서버응답오류');
+        const result = await res.json(); // 응답 메세지 바디를 읽어 json포맷 문자열 => js객체
+        if (result.header.rtcd == '00') {
+          console.log(result.body);
+          list(boardId); // 성공했으니 목록을 갱신
+        } else {
+          new Error('등록 실패!');
+        }
+      } catch (err) {
+        console.err(err);
+      }
+    }
+    //-------------------------------------------------------------------------
+    //댓글의 수정, 삭제, 저장, 취소 버튼 클릭시 처리
+    // .list 밑의 버튼 클릭시 이벤트 ------------------------------------------
+    document.querySelector('.commentLists').addEventListener('click', evt => {
+      let commentsId = document.querySelector('.cmsId').textContent; // 댓글번호찾기
+      // console.log(evt.target);
+      if (evt.target.tagName !== 'BUTTON') { return; } // 버튼이 아닌값들은 return 함
+      // console.log(evt.target);
+      switch (evt.target.classList[0]) { // 클래스의 값을 switch문으로
+        case "comEditBtn": // 수정 버튼 2
+          modify(evt);
+          break;
+        case "comDelBtn": // 삭제 버튼 1
+          del(commentsId);
+          break;
+        case "comSaveBtn": // 저장 버튼 4
+          save(evt);
+          break;
+        case "comCancelBtn": // 취소 버튼 3
+          cancel(evt);
+          break;
+      }
     });
 
 
+    //댓글 수정
+    function modify(evt) {
+
+      // 전체 취소버튼
+      document.querySelector('.commentLists .edit')?.querySelector('.comCancelBtn').click(); // optional chaining 적용 => ?.
+
+      // 수정 처리
+      const $myCommentDiv = evt.target.closest('div');
+      const originalCmsId = $myCommentDiv.querySelector('.cmsId').textContent; // 기존 cmsId
+      const originalText = $myCommentDiv.querySelector('.ccontent').textContent; // 기존 댓글내용
+      const originalWriter = $myCommentDiv.querySelector('.cwriter').textContent; // 기존 작성자
+
+      const $editModeDiv = editMode.content.cloneNode(true).querySelector('div'); // 수정모드 div생성
+      $editModeDiv.querySelector('.editccontent').value = originalText; // 댓글내용 수정모드로 삽입
+
+      // 사용자 정의 속성을 이용하여 현재 cid값 저장
+      $editModeDiv.querySelector('.editccontent').dataset.cmsIdValue = originalCmsId;
+
+      // 취소 시 이전값 사용자정의속성으로 저장
+      $editModeDiv.querySelector('.editccontent').dataset.oldText = originalText;
+      $editModeDiv.querySelector('.editccontent').dataset.oldWriter = originalWriter;
+
+      // 현재 Div, 수정Div로 변경
+      $myCommentDiv.replaceWith($editModeDiv);
+    }
+
+    // 댓글 삭제
+    async function del(commentsId) { // 삭제
+      const url = `http://localhost:9080/api/comments/${commentsId}`;
+      const option = {
+        method: 'DELETE',
+        headers: {
+          'accept': 'application/json',
+        },
+      };
+      try {
+        const res = await fetch(url, option);
+        if (!res.ok) return new Error('서버응답오류');
+        const result = await res.json(); // 응답 메세지 바디를 읽어 json포맷 문자열 => js객체
+        if (result.header.rtcd == '00') {
+          console.log(result.body); // 응답 바디 확인
+          list(boardId); // 삭제 후 목록 불러오기
+        } else {
+          new Error('삭제 실패!');
+        }
+        console.log(result);
+      } catch (err) {
+        console.err(err.message);
+      }
+    }
+
+    // 댓글 취소
+    function cancel(evt) {
+      const $originalDiv = myComment.content.cloneNode(true).querySelector('div'); // 되돌릴 Div
+      const $currentDiv = evt.target.closest('div'); // 수정모드 된 Div
+
+      // .editcontent에 사용자정의속성으로 넣었던 이전 데이터들 되돌릴 Div에 저장
+      $originalDiv.querySelector('.ccontent').textContent = $currentDiv.querySelector('.editccontent').dataset.oldText;
+      $originalDiv.querySelector('.cwriter').textContent = $currentDiv.querySelector('.editccontent').dataset.oldWriter;
+
+      $currentDiv.replaceWith($originalDiv);
+    }
 
 
 
-</script>
+
+
+  </script>
 </body>
+
 </html>

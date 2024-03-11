@@ -139,73 +139,73 @@ display:inline-block;
     </div>
   </form>
 </div>
-  <script>
-    //1) 제목 유효성 체크
-  title.addEventListener('focus',evt=>{
+<script>
+  //1) 제목 유효성 체크
+title.addEventListener('focus',evt=>{
+  evt.target.style.backgroundColor = 'lightgray';
+});
+
+title.addEventListener('blur',evt=>{
+  evt.target.style.backgroundColor = 'initial';
+  //유효성 체크
+  console.log(evt.target.value);
+  const pattern = /[a-zA-Z0-9ㄱ-ㅎ가-힣_\-]/;
+  if(pattern.test(evt.target.value)){
+    errTitle.classList.remove('on');
+    errTitle.textContent = '';
+  }else{
+    errTitle.classList.add('on');
+    errTitle.textContent = '필수로 입력하세요.';
+    evt.target.focus();
+    evt.target.select();
+  }
+});
+
+  //작성자 유효성 체크
+    writer.addEventListener('focus', evt => {
     evt.target.style.backgroundColor = 'lightgray';
-  });
+    });
 
-  title.addEventListener('blur',evt=>{
-    evt.target.style.backgroundColor = 'initial';
-    //유효성 체크
-    console.log(evt.target.value);
-    const pattern = /[a-zA-Z0-9ㄱ-ㅎ가-힣_\-]/;
-    if(pattern.test(evt.target.value)){
-      errTitle.classList.remove('on');
-      errTitle.textContent = '';
-    }else{
-      errTitle.classList.add('on');
-      errTitle.textContent = '필수로 입력하세요.';
-      evt.target.focus();
-      evt.target.select();
-    }
-  });
+    writer.addEventListener('blur',evt=>{
+      evt.target.style.backgroundColor = 'initial';
 
-    //작성자 유효성 체크
-      writer.addEventListener('focus', evt => {
-      evt.target.style.backgroundColor = 'lightgray';
-      });
+      //유효성 체크
+  console.log(evt.target.value);
+  const pattern = /[a-zA-Z0-9ㄱ-ㅎ가-힣_\-]/;
+  if(pattern.test(evt.target.value)){
+    errWriter.classList.remove('on');
+    errWriter.textContent = '';
+  }else{
+    errWriter.classList.add('on');
+    errWriter.textContent = '필수로 입력하세요.';
+    evt.target.focus();
+    evt.target.select();
+  }
+});
 
-      writer.addEventListener('blur',evt=>{
-        evt.target.style.backgroundColor = 'initial';
+  //내용 유효성 검사
+      content.addEventListener('focus', evt => {
+    evt.target.style.backgroundColor = 'lightgray';
+    });
 
-        //유효성 체크
-    console.log(evt.target.value);
-    const pattern = /[a-zA-Z0-9ㄱ-ㅎ가-힣_\-]/;
-    if(pattern.test(evt.target.value)){
-      errWriter.classList.remove('on');
-      errWriter.textContent = '';
-    }else{
-      errWriter.classList.add('on');
-      errWriter.textContent = '필수로 입력하세요.';
-      evt.target.focus();
-      evt.target.select();
-    }
-  });
+    content.addEventListener('blur',evt=>{
+      evt.target.style.backgroundColor = 'initial';
 
-    //내용 유효성 검사
-        content.addEventListener('focus', evt => {
-      evt.target.style.backgroundColor = 'lightgray';
-      });
+      //유효성 체크
+  console.log(evt.target.value);
+  const pattern = /[a-zA-Z0-9ㄱ-ㅎ가-힣_\-]{1-1000}/;
+  if(pattern.test(evt.target.value)){
+    errContent.classList.remove('on');
+    errContent.textContent = '';
+  }else{
+    errContent.classList.add('on');
+    errContent.textContent = '필수로 입력하세요.';
 
-      content.addEventListener('blur',evt=>{
-        evt.target.style.backgroundColor = 'initial';
+    evt.target.focus();
+    evt.target.select();
+  }
+});
 
-        //유효성 체크
-    console.log(evt.target.value);
-    const pattern = /[a-zA-Z0-9ㄱ-ㅎ가-힣_\-]{1-1000}/;
-    if(pattern.test(evt.target.value)){
-      errContent.classList.remove('on');
-      errContent.textContent = '';
-    }else{
-      errContent.classList.add('on');
-      errContent.textContent = '필수로 입력하세요.';
-
-      evt.target.focus();
-      evt.target.select();
-    }
-  });
-
-  </script>
+</script>
 </body>
 </html>

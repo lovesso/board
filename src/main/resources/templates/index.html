@@ -1,58 +1,92 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>초기화면(dynamic)</title>
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-  body {
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  }
+    h3 {
+      text-align: center;
+    }
 
-  h3 {
-  text-align: center;
-  }
+    ul {
+      display: flex;
+      flex-direction: column;
 
-  ul {
-  display:flex;
-  flex-direction: column;
+      list-style-type: none;
+      padding: 0;
+      text-align: center;
 
-  list-style-type: none;
-  padding: 0;
-  text-align: center;
+    }
 
-  }
+    li {
+      display: inline-block;
+      margin: 10px;
+    }
 
-  li {
-  display: inline-block;
-  margin: 10px;
-  }
-
-  a {
-  text-decoration: none;
-  color: #333;
-  padding: 10px;
-  border: 1px solid #333;
-  border-radius: 5px;
-  background-color: #fff;
-  transition: background-color 0.3s ease;
-  }
-
+    a {
+      text-decoration: none;
+      color: #333;
+      padding: 10px;
+      border: 1px solid #333;
+      border-radius: 5px;
+      background-color: #fff;
+      transition: background-color 0.3s ease;
+    }
   </style>
 </head>
-<body>
-<h3>자유게시판</h3>
-<ul>
-  <li><a href="/board">목록으로</a></li>
 
-</ul>
+<body>
+  <!--로그인 전 화면-->
+  <th:block th:unless="${session.loginMember}">
+    <h3>자유게시판</h3>
+    <ul>
+      <li><a href="/members/join">회원가입</a></li>
+      <li><a href="/members/login">로그인</a></li>
+
+    </ul>
+  </th:block>
+
+  <!--로그인 후 화면-->
+  <th:block th:if="${session.loginMember}">
+    <div>
+      <strong th:text="${session.loginMember.nickname}"></strong>
+      <span>님 환영합니다.</span>
+    </div>
+    <ul>
+      <li><a href="/board">자유게시판</a></li>
+      <li><a href="#" id="logout">로그아웃</a></li>
+    </ul>
+  </th:block>
+
+  <script>
+
+    // 로그아웃 버튼
+    const $logout = document.getElementById('logout');
+    $logout?.addEventListener('click', evt => { // 옵셔널 체이닝
+      evt.preventDefault(); // 현재 이벤트 막기
+      fetch('members/logout', { method: 'POST', body: null })
+        .then(res => res.text())
+        .then(data => {
+          if (data === 'OK') {
+            location.href = '/';
+          }
+        })
+        .catch(err => console.log(err));
+    });
+  </script>
+
 </body>
+
 </html>

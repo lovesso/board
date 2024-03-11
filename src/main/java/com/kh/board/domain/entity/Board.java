@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class Board {
+public class Board {  //게시판 객체
 
   private Long boardId;           //게시판 아이디
   private String title;             //제목

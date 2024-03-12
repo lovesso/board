@@ -13,4 +13,5 @@ public class Board {  //게시판 객체
   private String writer;              //작성자
   private LocalDateTime cdate;      //생성일시
   private LocalDateTime udate;      //수정일시
+
 }

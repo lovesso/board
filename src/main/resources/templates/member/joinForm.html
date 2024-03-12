@@ -5,10 +5,93 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Title</title>
+  <style>
+    <style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  h3 {
+    text-align: center;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    width: calc(100% - 10px);
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+<!--  #dupchkBtn {-->
+<!--    width: calc(100% - 10px);-->
+<!--    padding: 8px;-->
+<!--    margin-bottom: 10px;-->
+<!--    box-sizing: border-box;-->
+<!--    border: 1px solid #ccc;-->
+<!--    border-radius: 4px;-->
+<!--    display: inline-block;-->
+<!--    cursor: pointer;-->
+<!--    background-color: #008CBA;-->
+<!--    color: white;-->
+<!--  }-->
+
+  .errmsg {
+    display: block;
+    margin-bottom: 10px;
+    color: red;
+  }
+
+  .btn_wrap {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  #joinBtn,
+  #cancelBtn {
+    width: 48%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  #joinBtn {
+    background-color: #008CBA;
+    color: white;
+  }
+
+  #cancelBtn {
+    background-color: #f44336;
+    color: white;
+  }
+  </style>
 </head>
 <body>
-<h3>회원가입</h3>
+
 <form id="frm" action="/members/join" method="POST">
+  <h3>회원가입</h3>
 <p>
   <input type="text" name="email" placeholder="이메일">
   <button type="button" id="dupchkBtn" >중복체크</button>

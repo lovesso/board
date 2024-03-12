@@ -43,7 +43,7 @@ class BoardDAOImplTest {
   @Test
   @DisplayName("게시판 목록")
   void findAll() {
-    List<Board> list = boardDAO.findAll();
+    List<Board> list = boardDAO.findAll(1L, 5L);
     for (Board board : list) {
       log.info("board={}", board);
     }
@@ -89,4 +89,14 @@ class BoardDAOImplTest {
 
     }
   }
+
+//  @Test
+//  @DisplayName("게시글 페이징 전체 조회")
+//  void findAllMultiple(){
+//    List<Board> list = boardDAO.findAll(1L, 10L);
+//    for (Board board : list){
+//      log.info("board={}", board);
+//    }
+//    log.info("size={}", list.size());
+//  }
 }

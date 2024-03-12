@@ -65,14 +65,20 @@ public class BoardDAOImpl implements BoardDAO {
 
   //목록
   @Override
-  public List<Board> findAll() {
+  public List<Board> findAll(Long reqPage, Long recCnt) {
     StringBuffer sql = new StringBuffer();
     sql.append("select board_id, title, content, writer, cdate, udate ");
     sql.append("from board ");
     sql.append("order by board_id desc ");
 
-    List<Board> list = template.query(sql.toString(), BeanPropertyRowMapper.newInstance(Board.class));
-    return list;
+    try {
+      Map<String, Long> map = Map.of("reqPage", reqPage, "recCnt", recCnt);
+
+      List<Board> list = template.query(sql.toString(), BeanPropertyRowMapper.newInstance(Board.class));
+      return list;
+    } catch (EmptyResultDataAccessException e) {
+      return List.of();
+    }
   }
 
   //단건 삭제
@@ -124,5 +130,16 @@ public class BoardDAOImpl implements BoardDAO {
     int updateRowCnt = template.update(sql.toString(), param);
 
     return updateRowCnt;
+  }
+
+  //총레코드건수
+  @Override
+  public int totalCnt() {
+    String sql = "SELECT COUNT(board_id) from board ";
+
+    SqlParameterSource param = new MapSqlParameterSource();
+    Integer cnt = template.queryForObject(sql, param, Integer.class);
+
+    return cnt;
   }
 }

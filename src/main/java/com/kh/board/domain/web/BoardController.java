@@ -66,13 +66,21 @@ public class BoardController {
   }
 
   // 게시판 목록
-  @GetMapping// http://localhost:9080/board
-  public String findAll(Model model) {
+  @GetMapping// http://localhost:9080/board?reqPage=2&reqCnt=5
+  public String findAll(Model model,
+                        @RequestParam(value = "reqPage", defaultValue = "1") Long reqPage,
+                        @RequestParam(value = "recCnt", defaultValue = "5") Long recCnt,
+                        @RequestParam(value = "cpgs", defaultValue = "1") Long cpgs,
+                        @RequestParam(value = "cp", defaultValue = "1") Long cp) {
 
-    List<Board> list = boardSVC.findAll();
+    List<Board> list = boardSVC.findAll(reqPage, recCnt);
+    int totalCnt = boardSVC.totalCnt();
     model.addAttribute("list", list);
+    model.addAttribute("totalCnt", totalCnt);
+    model.addAttribute("cpgs", cpgs);
+    model.addAttribute("cp", cp);
 
-    return "board/all";
+    return "board/allByPaging";
   }
 
   //단건 삭제

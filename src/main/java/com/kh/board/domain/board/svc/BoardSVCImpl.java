@@ -31,8 +31,8 @@ public class BoardSVCImpl implements BoardSVC {
 
   //게시판 목록
   @Override
-  public List<Board> findAll() {
-    return boardDAO.findAll();
+  public List<Board> findAll(Long reqPage, Long recCnt) {
+    return boardDAO.findAll(reqPage, recCnt);
   }
 
   //게시글 단건 삭제
@@ -51,6 +51,11 @@ public class BoardSVCImpl implements BoardSVC {
   @Override
   public int updateById(Long boardId, Board board) {
     return boardDAO.updateById(boardId, board);
+  }
+
+  @Override
+  public int totalCnt(){
+    return boardDAO.totalCnt();
   }
 }
 

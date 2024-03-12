@@ -14,7 +14,7 @@ public interface BoardSVC {
   Optional<Board> findById(Long boardId);
 
   //게시판 목록
-  List<Board> findAll();
+  List<Board> findAll(Long reqPage, Long recCnt);
 
   //단건삭제
   int deleteById(Long boardId);
@@ -23,5 +23,10 @@ public interface BoardSVC {
 
   //수정
   int updateById(Long boardId, Board board);
+
+  //총레코드건수
+  int totalCnt();
+
+
 }
 

@@ -5,10 +5,73 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Title</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    form h3 {
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      width: 400px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .btn_wrap {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    #loginBtn,
+    #cancelBtn {
+      width: 48%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #loginBtn {
+      background-color: #008CBA;
+      color: white;
+    }
+
+    #cancelBtn {
+      background-color: #f44336;
+      color: white;
+    }
+  </style>
 </head>
+
 <body>
-<h3>로그인</h3>
+
 <form action="" method="POST">
+  <h3>로그인</h3>
   <p><input type="text" name="email" placeholder="이메일"></p>
   <p><input type="password" name="passwd" placeholder="비밀번호"></p>
   <div class="btn_wrap">

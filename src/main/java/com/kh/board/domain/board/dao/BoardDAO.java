@@ -14,7 +14,7 @@ public interface BoardDAO {
   Optional<Board> findById(Long boardId);
 
   //게시글 전체 목록: List<> 모든 데이터를 조회하고 리스트 형태로 반환.
-  List<Board> findAll();
+  List<Board> findAll(Long reqPage, Long recCnt);
 
   //단건 삭제
   int deleteById(Long boardId);
@@ -24,4 +24,7 @@ public interface BoardDAO {
 
   //수정
   int updateById(Long boardId, Board board);
+
+  //총레코드 건수
+  int totalCnt();
 }
